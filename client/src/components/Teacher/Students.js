@@ -21,7 +21,7 @@ const Students = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/teacher/students/class/${selectedClass}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/students/class/${selectedClass}`);
       setStudents(response.data);
       setSelectedStudent(null);
       setStudentPerformance(null);
@@ -32,7 +32,7 @@ const Students = () => {
 
   const fetchStudentPerformance = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/teacher/students/${selectedStudent.id}/performance`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/students/${selectedStudent.id}/performance`);
       setStudentPerformance(response.data);
     } catch (error) {
       toast.error('Failed to fetch student performance');

@@ -42,7 +42,7 @@ const Quizzes = () => {
 
   const fetchSubjects = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/teacher/subjects');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/subjects`);
       setSubjects(response.data);
       if (response.data.length > 0 && !selectedSubject) {
         setSelectedSubject(response.data[0].id);
@@ -54,7 +54,7 @@ const Quizzes = () => {
 
   const fetchExperiments = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/teacher/experiments/${selectedSubject}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/experiments/${selectedSubject}`);
       setExperiments(response.data);
     } catch (error) {
       toast.error('Failed to fetch experiments');
@@ -63,7 +63,7 @@ const Quizzes = () => {
 
   const fetchQuizzes = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/teacher/quizzes/${selectedSubject}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/quizzes/${selectedSubject}`);
       setQuizzes(response.data);
     } catch (error) {
       toast.error('Failed to fetch quizzes');
@@ -83,7 +83,7 @@ const Quizzes = () => {
           end_date: formData.end_date || null,
           proctoring: formData.proctoring
         };
-        await axios.put(`http://localhost:5000/api/teacher/quizzes/${editingQuiz.id}`, updateData);
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/teacher/quizzes/${editingQuiz.id}`, updateData);
         toast.success('Quiz updated successfully');
       } else {
         const quizData = {
@@ -93,7 +93,7 @@ const Quizzes = () => {
             options: q.question_type === 'mcq' ? q.options : null
           }))
         };
-        await axios.post('http://localhost:5000/api/teacher/quizzes', quizData);
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/teacher/quizzes`, quizData);
         toast.success('Quiz created successfully');
       }
       setShowModal(false);
@@ -108,7 +108,7 @@ const Quizzes = () => {
   const handleEdit = async (quiz) => {
     try {
       // Fetch quiz details with questions
-      const response = await axios.get(`http://localhost:5000/api/teacher/quizzes/details/${quiz.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/quizzes/details/${quiz.id}`);
       const quizData = response.data;
       
       setEditingQuiz(quiz);
@@ -197,7 +197,7 @@ const Quizzes = () => {
 
   const toggleQuizActive = async (quiz) => {
     try {
-      await axios.put(`http://localhost:5000/api/teacher/quizzes/${quiz.id}/activate`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/teacher/quizzes/${quiz.id}/activate`, {
         is_active: !quiz.is_active
       });
       toast.success(`Quiz ${!quiz.is_active ? 'activated' : 'deactivated'}`);
@@ -215,7 +215,7 @@ const Quizzes = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/teacher/quizzes/import-questions', formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/teacher/quizzes/import-questions`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       
@@ -647,7 +647,7 @@ const ImportQuestionsForm = ({ importedQuestions, experiments, selectedSubject, 
         }))
       };
 
-      await axios.post('http://localhost:5000/api/teacher/quizzes', quizData);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/teacher/quizzes`, quizData);
       toast.success('Quiz created successfully with imported questions!');
       onSuccess();
     } catch (error) {

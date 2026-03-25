@@ -26,7 +26,7 @@ const Students = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/students');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/students`);
       setStudents(response.data);
     } catch (error) {
       toast.error('Failed to fetch students');
@@ -35,7 +35,7 @@ const Students = () => {
 
   const fetchSubjects = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/subjects');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/subjects`);
       setSubjects(response.data);
     } catch (error) {
       toast.error('Failed to fetch subjects');
@@ -44,7 +44,7 @@ const Students = () => {
 
   const fetchClasses = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/classes');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/classes`);
       setClasses(response.data);
     } catch (error) {
       toast.error('Failed to fetch classes');
@@ -55,10 +55,10 @@ const Students = () => {
     e.preventDefault();
     try {
       if (editingStudent) {
-        await axios.put(`http://localhost:5000/api/admin/students/${editingStudent.id}`, formData);
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/students/${editingStudent.id}`, formData);
         toast.success('Student updated successfully');
       } else {
-        await axios.post('http://localhost:5000/api/admin/students', formData);
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/students`, formData);
         toast.success('Student created successfully');
       }
       setShowModal(false);
@@ -96,7 +96,7 @@ const Students = () => {
     if (!window.confirm('Are you sure you want to delete this student?')) return;
     
     try {
-      await axios.delete(`http://localhost:5000/api/admin/users/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/users/${id}`);
       toast.success('Student deleted successfully');
       fetchStudents();
     } catch (error) {
@@ -112,7 +112,7 @@ const Students = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/admin/import-users', formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/import-users`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       toast.success('Students imported successfully');

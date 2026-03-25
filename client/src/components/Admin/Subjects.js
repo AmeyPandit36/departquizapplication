@@ -16,7 +16,7 @@ const Subjects = () => {
 
   const fetchClasses = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/classes');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/classes`);
       setClasses(response.data);
       if (response.data.length > 0 && !formData.class_id) {
         setFormData(prev => ({ ...prev, class_id: response.data[0].id }));
@@ -28,7 +28,7 @@ const Subjects = () => {
 
   const fetchSubjects = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/subjects');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/subjects`);
       setSubjects(response.data);
     } catch (error) {
       toast.error('Failed to fetch subjects');
@@ -39,10 +39,10 @@ const Subjects = () => {
     e.preventDefault();
     try {
       if (editingSubject) {
-        await axios.put(`http://localhost:5000/api/admin/subjects/${editingSubject.id}`, formData);
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/subjects/${editingSubject.id}`, formData);
         toast.success('Subject updated successfully');
       } else {
-        await axios.post('http://localhost:5000/api/admin/subjects', formData);
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/subjects`, formData);
         toast.success('Subject created successfully');
       }
       setShowModal(false);
@@ -64,7 +64,7 @@ const Subjects = () => {
     if (!window.confirm('Are you sure you want to delete this subject?')) return;
     
     try {
-      await axios.delete(`http://localhost:5000/api/admin/subjects/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/subjects/${id}`);
       toast.success('Subject deleted successfully');
       fetchSubjects();
     } catch (error) {

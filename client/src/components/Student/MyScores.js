@@ -16,7 +16,7 @@ const MyScores = () => {
 
   const fetchScores = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/student/scores');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/student/scores`);
       setScores(response.data);
     } catch (error) {
       toast.error('Failed to fetch scores');
@@ -25,7 +25,7 @@ const MyScores = () => {
 
   const fetchPerformance = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/student/performance');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/student/performance`);
       setPerformance(response.data);
     } catch (error) {
       toast.error('Failed to fetch performance data');

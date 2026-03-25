@@ -44,7 +44,7 @@ const Analysis = () => {
 
   const fetchSubjects = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/teacher/subjects');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/subjects`);
       setSubjects(response.data);
       if (response.data.length > 0 && !selectedSubject) {
         setSelectedSubject(response.data[0].id);
@@ -56,7 +56,7 @@ const Analysis = () => {
 
   const fetchExperiments = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/teacher/experiments/${selectedSubject}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/experiments/${selectedSubject}`);
       setExperiments(response.data);
       setSelectedExperiment('');
     } catch (error) {
@@ -67,8 +67,8 @@ const Analysis = () => {
   const fetchSubjectAnalysis = async () => {
     try {
       const url = selectedExperiment
-        ? `http://localhost:5000/api/teacher/analysis/subject/${selectedSubject}?experiment_id=${selectedExperiment}`
-        : `http://localhost:5000/api/teacher/analysis/subject/${selectedSubject}`;
+        ? `${process.env.REACT_APP_API_URL}/api/teacher/analysis/subject/${selectedSubject}?experiment_id=${selectedExperiment}`
+        : `${process.env.REACT_APP_API_URL}/api/teacher/analysis/subject/${selectedSubject}`;
       const response = await axios.get(url);
       setSubjectAnalysis(response.data);
       if (response.data.length > 0 && !selectedQuiz) {
@@ -83,7 +83,7 @@ const Analysis = () => {
     try {
       // Ensure quizId is a clean number
       const cleanQuizId = typeof quizId === 'string' ? quizId.split(':')[0] : quizId;
-      const response = await axios.get(`http://localhost:5000/api/teacher/quizzes/details/${cleanQuizId}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/quizzes/details/${cleanQuizId}`);
       setQuizDetails(response.data);
       setShowQuizDetails(true);
     } catch (error) {
@@ -95,7 +95,7 @@ const Analysis = () => {
 
   const fetchQuestionAnalysis = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/teacher/analysis/quiz/${selectedQuiz}/questions`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/analysis/quiz/${selectedQuiz}/questions`);
       setQuestionAnalysis(response.data);
     } catch (error) {
       console.error('Question analysis error:', error);
@@ -107,7 +107,7 @@ const Analysis = () => {
 
   const fetchQuizAttempts = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/teacher/quizzes/${selectedQuiz}/attempts`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/quizzes/${selectedQuiz}/attempts`);
       setQuizAttempts(response.data);
     } catch (error) {
       toast.error('Failed to fetch quiz attempts');

@@ -23,7 +23,7 @@ const Teachers = () => {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/teachers');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/teachers`);
       setTeachers(response.data);
     } catch (error) {
       toast.error('Failed to fetch teachers');
@@ -32,7 +32,7 @@ const Teachers = () => {
 
   const fetchSubjects = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/subjects');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/subjects`);
       setSubjects(response.data);
     } catch (error) {
       toast.error('Failed to fetch subjects');
@@ -43,10 +43,10 @@ const Teachers = () => {
     e.preventDefault();
     try {
       if (editingTeacher) {
-        await axios.put(`http://localhost:5000/api/admin/teachers/${editingTeacher.id}`, formData);
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/teachers/${editingTeacher.id}`, formData);
         toast.success('Teacher updated successfully');
       } else {
-        await axios.post('http://localhost:5000/api/admin/teachers', formData);
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/teachers`, formData);
         toast.success('Teacher created successfully');
       }
       setShowModal(false);
@@ -82,7 +82,7 @@ const Teachers = () => {
     if (!window.confirm('Are you sure you want to delete this teacher?')) return;
     
     try {
-      await axios.delete(`http://localhost:5000/api/admin/users/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/users/${id}`);
       toast.success('Teacher deleted successfully');
       fetchTeachers();
     } catch (error) {
@@ -98,7 +98,7 @@ const Teachers = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/admin/import-users', formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/import-users`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       toast.success('Users imported successfully');

@@ -14,7 +14,7 @@ const QuizResultView = ({ quizId, onBack }) => {
   const fetchQuizResult = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/student/quizzes/${quizId}/result`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/student/quizzes/${quizId}/result`);
       setResultData(response.data);
     } catch (error) {
       console.error('Error fetching quiz result:', error);

@@ -32,7 +32,7 @@ const TakeQuiz = ({ quiz, onBack }) => {
         Object.assign(formattedAnswers, answers);
       }
 
-      const response = await axios.post(`http://localhost:5000/api/student/quizzes/${quiz.id}/submit`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/student/quizzes/${quiz.id}/submit`, {
         answers: formattedAnswers
       });
       
@@ -72,7 +72,7 @@ const TakeQuiz = ({ quiz, onBack }) => {
 
   const fetchQuizDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/student/quizzes/details/${quiz.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/student/quizzes/details/${quiz.id}`);
       
       if (!response.data || !response.data.questions || response.data.questions.length === 0) {
         toast.error('Quiz has no questions or data is invalid');

@@ -18,13 +18,13 @@ const Statistics = () => {
   const fetchStats = async () => {
     try {
       const [classRes, subjectRes, partRes, scoresRes, perfRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/stats/quizzes-by-class'),
-        axios.get('http://localhost:5000/api/admin/stats/quizzes-by-subject'),
-        axios.get('http://localhost:5000/api/admin/stats/student-participation'),
-        axios.get('http://localhost:5000/api/admin/stats/student-scores', {
+        axios.get(`${process.env.REACT_APP_API_URL}/api/admin/stats/quizzes-by-class`),
+        axios.get(`${process.env.REACT_APP_API_URL}/api/admin/stats/quizzes-by-subject`),
+        axios.get(`${process.env.REACT_APP_API_URL}/api/admin/stats/student-participation`),
+        axios.get(`${process.env.REACT_APP_API_URL}/api/admin/stats/student-scores`, {
           params: selectedStudent ? { student_id: selectedStudent } : {}
         }),
-        axios.get('http://localhost:5000/api/admin/stats/student-performance', {
+        axios.get(`${process.env.REACT_APP_API_URL}/api/admin/stats/student-performance`, {
           params: selectedStudent ? { student_id: selectedStudent } : {}
         })
       ]);

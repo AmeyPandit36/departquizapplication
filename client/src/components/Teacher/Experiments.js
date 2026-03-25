@@ -27,7 +27,7 @@ const Experiments = () => {
 
   const fetchSubjects = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/teacher/subjects');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/subjects`);
       setSubjects(response.data);
       if (response.data.length > 0 && !selectedSubject) {
         setSelectedSubject(response.data[0].id);
@@ -40,7 +40,7 @@ const Experiments = () => {
 
   const fetchExperiments = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/teacher/experiments/${selectedSubject}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/teacher/experiments/${selectedSubject}`);
       setExperiments(response.data);
     } catch (error) {
       toast.error('Failed to fetch experiments');
@@ -51,10 +51,10 @@ const Experiments = () => {
     e.preventDefault();
     try {
       if (editingExperiment) {
-        await axios.put(`http://localhost:5000/api/teacher/experiments/${editingExperiment.id}`, formData);
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/teacher/experiments/${editingExperiment.id}`, formData);
         toast.success('Experiment updated successfully');
       } else {
-        await axios.post('http://localhost:5000/api/teacher/experiments', formData);
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/teacher/experiments`, formData);
         toast.success('Experiment created successfully');
       }
       setShowModal(false);
@@ -86,7 +86,7 @@ const Experiments = () => {
     if (!window.confirm('Are you sure you want to delete this experiment?')) return;
     
     try {
-      await axios.delete(`http://localhost:5000/api/teacher/experiments/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/teacher/experiments/${id}`);
       toast.success('Experiment deleted successfully');
       fetchExperiments();
     } catch (error) {

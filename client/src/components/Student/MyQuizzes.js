@@ -23,7 +23,7 @@ const MyQuizzes = () => {
 
   const fetchSubjects = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/student/subjects');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/student/subjects`);
       setSubjects(response.data);
       if (response.data.length > 0 && !selectedSubject) {
         setSelectedSubject(response.data[0].id);
@@ -35,7 +35,7 @@ const MyQuizzes = () => {
 
   const fetchQuizzes = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/student/quizzes/${selectedSubject}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/student/quizzes/${selectedSubject}`);
       setQuizzes(response.data);
     } catch (error) {
       toast.error('Failed to fetch quizzes');
@@ -44,7 +44,7 @@ const MyQuizzes = () => {
 
   const handleStartQuiz = async (quiz) => {
     try {
-      await axios.post(`http://localhost:5000/api/student/quizzes/${quiz.id}/start`);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/student/quizzes/${quiz.id}/start`);
       setSelectedQuiz(quiz);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to start quiz');
