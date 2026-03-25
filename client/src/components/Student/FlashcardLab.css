@@ -1,0 +1,134 @@
+.flashcard-lab-container {
+  width: 100%;
+  height: 80vh;
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #1a1a2e, #16213e, #0f3460);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.flashcard-lab-controls {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.lab-btn {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.lab-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.lab-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pulse-btn {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+  border-color: rgba(255, 215, 0, 0.5);
+}
+
+.pulse-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 165, 0, 0.3));
+  box-shadow: 0 6px 25px rgba(255, 215, 0, 0.4);
+}
+
+.cluster-btn {
+  background: linear-gradient(135deg, rgba(100, 181, 246, 0.2), rgba(66, 165, 245, 0.2));
+  border-color: rgba(100, 181, 246, 0.5);
+}
+
+.cluster-btn:hover {
+  background: linear-gradient(135deg, rgba(100, 181, 246, 0.3), rgba(66, 165, 245, 0.3));
+  box-shadow: 0 6px 25px rgba(100, 181, 246, 0.4);
+}
+
+.lab-stats {
+  display: flex;
+  gap: 15px;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.lab-stats span {
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .flashcard-lab-container {
+    height: 70vh;
+  }
+
+  .flashcard-lab-controls {
+    top: 10px;
+    left: 10px;
+    gap: 10px;
+  }
+
+  .lab-btn {
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+
+  .lab-stats {
+    padding: 8px 15px;
+    font-size: 12px;
+    gap: 10px;
+  }
+}
+
+/* Animation for gravity pulse */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* Loading state */
+.flashcard-lab-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: white;
+  font-size: 18px;
+}
+
+
+
+
