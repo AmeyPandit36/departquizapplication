@@ -59,11 +59,11 @@ router.get('/quizzes/:subject_id', async (req, res) => {
       JOIN experiments e ON q.experiment_id = e.id
       LEFT JOIN quiz_attempts qa ON q.id = qa.quiz_id AND qa.student_id = ?
       WHERE q.subject_id = ? 
-        AND q.is_active = true
-        AND (q.start_date IS NULL OR q.start_date <= ?)
-        AND (q.end_date IS NULL OR q.end_date >= ?)
+        AND q.is_active = 1
+        AND (q.start_date IS NULL OR q.start_date <= NOW())
+        AND (q.end_date IS NULL OR q.end_date >= NOW())
       ORDER BY q.start_date DESC
-    `, [req.user.id, subject_id, nowString, nowString]);
+    `, [req.user.id, parseInt(subject_id)]);
     
     res.json(quizzes);
   } catch (error) {
@@ -614,5 +614,141 @@ router.get('/quizzes/:id/result', async (req, res) => {
   }
 });
 
+// ─── Dashboard Summary ────────────────────────────────────────────
+// GET /api/student/dashboard
+router.get('/dashboard', async (req, res) => {
+  try {
+    const studentId = req.user.id;
+
+    // Subject count
+    const [subjects] = await db.pool.query(
+      'SELECT COUNT(*) as count FROM student_subjects WHERE student_id = ?',
+      [studentId]
+    );
+
+    // Recent 5 attempts
+    const [recentScores] = await db.pool.query(`
+      SELECT q.title as quiz_title, s.name as subject_name, qa.score, qa.percentage,
+             q.total_marks, qa.submitted_at, q.id as quiz_id
+      FROM quiz_attempts qa
+      JOIN quizzes q ON qa.quiz_id = q.id
+      JOIN subjects s ON q.subject_id = s.id
+      WHERE qa.student_id = ? AND qa.submitted_at IS NOT NULL
+      ORDER BY qa.submitted_at DESC
+      LIMIT 5
+    `, [studentId]);
+
+    // Overall stats
+    const [stats] = await db.pool.query(`
+      SELECT COUNT(*) as total_quizzes,
+             AVG(qa.percentage) as avg_percentage,
+             MAX(qa.percentage) as best_percentage
+      FROM quiz_attempts qa
+      WHERE qa.student_id = ? AND qa.submitted_at IS NOT NULL
+    `, [studentId]);
+
+    // Subject-wise performance
+    const [subjectPerf] = await db.pool.query(`
+      SELECT s.name as subject_name, c.name as class_name,
+             AVG(qa.percentage) as avg_percentage,
+             COUNT(qa.id) as total_quizzes
+      FROM quiz_attempts qa
+      JOIN quizzes q ON qa.quiz_id = q.id
+      JOIN subjects s ON q.subject_id = s.id
+      JOIN classes c ON s.class_id = c.id
+      WHERE qa.student_id = ? AND qa.submitted_at IS NOT NULL
+      GROUP BY s.id, s.name, c.name
+      ORDER BY avg_percentage DESC
+    `, [studentId]);
+
+    // Upcoming quizzes (active, not attempted, ending soon)
+    const [upcomingQuizzes] = await db.pool.query(`
+      SELECT q.id, q.title, q.end_date, q.duration_minutes, q.total_marks,
+             s.name as subject_name, e.experiment_number
+      FROM quizzes q
+      JOIN subjects s ON q.subject_id = s.id
+      JOIN experiments e ON q.experiment_id = e.id
+      JOIN student_subjects ss ON s.id = ss.subject_id
+      LEFT JOIN quiz_attempts qa ON q.id = qa.quiz_id AND qa.student_id = ? AND qa.submitted_at IS NOT NULL
+      WHERE ss.student_id = ?
+        AND q.is_active = 1
+        AND (q.start_date IS NULL OR q.start_date <= NOW())
+        AND q.end_date IS NOT NULL AND q.end_date >= NOW()
+        AND qa.id IS NULL
+      ORDER BY q.end_date ASC
+      LIMIT 5
+    `, [studentId, studentId]);
+
+    res.json({
+      subject_count: subjects[0].count,
+      stats: {
+        total_quizzes: stats[0].total_quizzes || 0,
+        avg_percentage: stats[0].avg_percentage ? parseFloat(stats[0].avg_percentage).toFixed(1) : '0.0',
+        best_percentage: stats[0].best_percentage ? parseFloat(stats[0].best_percentage).toFixed(1) : '0.0'
+      },
+      recent_scores: recentScores,
+      subject_performance: subjectPerf,
+      upcoming_quizzes: upcomingQuizzes
+    });
+  } catch (error) {
+    console.error('Dashboard error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// ─── Get Student Profile ──────────────────────────────────────────
+// GET /api/student/profile
+router.get('/profile', async (req, res) => {
+  try {
+    const [users] = await db.pool.query(
+      'SELECT id, user_id, name, email, roll_number FROM users WHERE id = ?',
+      [req.user.id]
+    );
+    if (users.length === 0) return res.status(404).json({ message: 'User not found' });
+
+    const [subjects] = await db.pool.query(`
+      SELECT s.id, s.name, c.name as class_name
+      FROM subjects s
+      JOIN classes c ON s.class_id = c.id
+      JOIN student_subjects ss ON s.id = ss.subject_id
+      WHERE ss.student_id = ?
+      ORDER BY c.name, s.name
+    `, [req.user.id]);
+
+    res.json({ ...users[0], subjects });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// ─── Change Password ──────────────────────────────────────────────
+// PUT /api/student/profile/password
+router.put('/profile/password', async (req, res) => {
+  try {
+    const { current_password, new_password } = req.body;
+    if (!current_password || !new_password) {
+      return res.status(400).json({ message: 'Current and new passwords are required' });
+    }
+    if (new_password.length < 6) {
+      return res.status(400).json({ message: 'New password must be at least 6 characters' });
+    }
+
+    const [users] = await db.pool.query('SELECT * FROM users WHERE id = ?', [req.user.id]);
+    if (users.length === 0) return res.status(404).json({ message: 'User not found' });
+
+    const bcrypt = require('bcryptjs');
+    const isMatch = await bcrypt.compare(current_password, users[0].password);
+    if (!isMatch) return res.status(400).json({ message: 'Current password is incorrect' });
+
+    const hashed = await bcrypt.hash(new_password, 10);
+    await db.pool.query('UPDATE users SET password = ? WHERE id = ?', [hashed, req.user.id]);
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 module.exports = router;
+
 

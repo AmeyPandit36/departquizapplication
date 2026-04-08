@@ -1,0 +1,1 @@
+﻿{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NDg4NzU0OSwiZXhwIjoxNzc1NDkyMzQ5fQ.Xee3ZcWHUxFc-Q4XGTCesMqsYjER1h2Kq38yFmsvZes","user":{"id":1,"user_id":"ADMIN001","name":"System Admin","email":"admin@itdept.com","role":"admin"}}

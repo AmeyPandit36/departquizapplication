@@ -378,7 +378,7 @@ router.get('/quizzes/:subject_id', async (req, res) => {
       JOIN experiments e ON q.experiment_id = e.id
       LEFT JOIN quiz_attempts qa ON q.id = qa.quiz_id
       WHERE q.subject_id = ?
-      GROUP BY q.id
+      GROUP BY q.id, e.experiment_number, e.title
       ORDER BY q.created_at DESC
     `, [subject_id]);
     
@@ -703,7 +703,7 @@ router.get('/analysis/subject/:subject_id', async (req, res) => {
       params.push(experiment_id);
     }
     
-    query += ' GROUP BY q.id, q.title, e.experiment_number, e.id, e.title ORDER BY e.experiment_number, q.created_at';
+    query += ' GROUP BY q.id, q.title, q.total_marks, q.duration_minutes, q.start_date, q.end_date, q.is_active, e.id, e.experiment_number, e.title ORDER BY e.experiment_number, q.created_at';
     
     const [analysis] = await db.pool.query(query, params);
     

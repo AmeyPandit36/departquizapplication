@@ -1,0 +1,142 @@
+{
+  "quizzes": [
+    {
+      "id": 30001,
+      "experiment_id": 30001,
+      "subject_id": 1,
+      "title": "Supervised Learning",
+      "total_marks": 20,
+      "duration_minutes": 20,
+      "start_date": "2026-03-29T12:26:00.000Z",
+      "end_date": "2026-04-02T12:26:00.000Z",
+      "is_active": 1,
+      "enable_proctoring": 0,
+      "snapshot_interval_min": 60,
+      "snapshot_interval_max": 180,
+      "max_focus_violations": 3,
+      "created_by": 540001,
+      "created_at": "2026-03-29T06:56:24.000Z"
+    }
+  ],
+  "users": [
+    {
+      "id": 60003,
+      "user_id": "T23001",
+      "name": "Amey Ravindra Pandit",
+      "email": "t23001@famt.ac.in",
+      "password": "$2a$10$egJgUwZkfwkBoBz35D40L.oielJlsUvdLWor6T6NENz3GsW1vINEW",
+      "role": "student",
+      "qualification": null,
+      "class_id": 2,
+      "roll_number": "1",
+      "created_at": "2026-03-25T10:38:34.000Z",
+      "updated_at": "2026-03-29T07:07:05.000Z"
+    },
+    {
+      "id": 180004,
+      "user_id": "TESTSTUDENT1",
+      "name": "Test User 1",
+      "email": null,
+      "password": "$2a$10$4ryLLfcvjR/Sc4J6YkFoJ.D1IE1YycpL/aV8ZYd1DWbI3FxiD9TtW",
+      "role": "student",
+      "qualification": null,
+      "class_id": 3,
+      "roll_number": "123",
+      "created_at": "2026-03-25T16:31:03.000Z",
+      "updated_at": "2026-03-25T16:31:03.000Z"
+    },
+    {
+      "id": 180005,
+      "user_id": "TST02",
+      "name": "Test",
+      "email": null,
+      "password": "$2a$10$X/91uWQRbtx7h8w7oUoxsOOKega9umC/navCAlg2oofwG5dmJBkQm",
+      "role": "student",
+      "qualification": null,
+      "class_id": null,
+      "roll_number": "12",
+      "created_at": "2026-03-25T16:34:52.000Z",
+      "updated_at": "2026-03-25T16:34:52.000Z"
+    },
+    {
+      "id": 180006,
+      "user_id": "TST03",
+      "name": "Test",
+      "email": null,
+      "password": "$2a$10$ECEyOxBPM4Cgn8rRPEHSwOlzL2Qtre2jKPGVJQFIGqwgz98wAYDY2",
+      "role": "student",
+      "qualification": null,
+      "class_id": null,
+      "roll_number": "12",
+      "created_at": "2026-03-25T16:35:28.000Z",
+      "updated_at": "2026-03-25T16:35:28.000Z"
+    },
+    {
+      "id": 180010,
+      "user_id": "TST099",
+      "name": "Test",
+      "email": null,
+      "password": "$2a$10$zj9vxfhIKeHwWCeVRJfkiuFLR/wZChNigcojv8z7KM4l0RrjfHcFG",
+      "role": "student",
+      "qualification": null,
+      "class_id": 1,
+      "roll_number": "12",
+      "created_at": "2026-03-25T16:37:41.000Z",
+      "updated_at": "2026-03-25T16:37:41.000Z"
+    },
+    {
+      "id": 180015,
+      "user_id": "t23002",
+      "name": "Soham Pandit",
+      "email": "soham@gmail.com",
+      "password": "$2a$10$8hIF0AQ9QA29stbyus9Sq.fJCkrNO5V25ZxtEEdYu8W84.lsRjcji",
+      "role": "student",
+      "qualification": null,
+      "class_id": 2,
+      "roll_number": "888",
+      "created_at": "2026-03-25T16:42:15.000Z",
+      "updated_at": "2026-03-29T07:07:12.000Z"
+    },
+    {
+      "id": 540002,
+      "user_id": "STU001",
+      "name": "Soham Pandit",
+      "email": "sohampandit@gmail.com",
+      "password": "$2a$10$44vZ4wPkLJALEF0Z6ovuNOpvlb5zSLM5EQ3MSm7SlT2mrM3XUpv4K",
+      "role": "student",
+      "qualification": null,
+      "class_id": 3,
+      "roll_number": "1",
+      "created_at": "2026-03-29T06:47:15.000Z",
+      "updated_at": "2026-03-29T06:47:15.000Z"
+    }
+  ],
+  "enrollments": [
+    {
+      "id": 60001,
+      "student_id": 540002,
+      "subject_id": 1,
+      "created_at": "2026-03-29T06:47:15.000Z"
+    },
+    {
+      "id": 90002,
+      "student_id": 60003,
+      "subject_id": 1,
+      "created_at": "2026-03-29T07:07:05.000Z"
+    },
+    {
+      "id": 90003,
+      "student_id": 180015,
+      "subject_id": 1,
+      "created_at": "2026-03-29T07:07:12.000Z"
+    }
+  ],
+  "subjects": [
+    {
+      "id": 1,
+      "name": "DBMI",
+      "class_id": 2,
+      "created_at": "2026-03-25T10:20:00.000Z"
+    }
+  ]
+}

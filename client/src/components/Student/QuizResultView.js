@@ -9,7 +9,7 @@ const QuizResultView = ({ quizId, onBack }) => {
 
   useEffect(() => {
     fetchQuizResult();
-  }, [quizId]);
+  }, [quizId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchQuizResult = async () => {
     try {
@@ -25,190 +25,149 @@ const QuizResultView = ({ quizId, onBack }) => {
     }
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const handlePrint = () => window.print();
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return date.toLocaleString('en-IN', {
+      year: 'numeric', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit'
     });
   };
 
-  if (loading) {
-    return <div className="loading">Loading quiz result...</div>;
-  }
-
-  if (!resultData) {
-    return <div className="error-message">Quiz result not found.</div>;
-  }
+  if (loading) return <div className="qrv-loading">Loading result...</div>;
+  if (!resultData) return <div className="qrv-error">Result not found.</div>;
 
   const { student, quiz, attempt, questions } = resultData;
+  const correct = questions.filter(q => q.is_correct).length;
+  const incorrect = questions.length - correct;
+  const pct = attempt.percentage.toFixed(1);
+  const grade = pct >= 90 ? 'A+' : pct >= 75 ? 'A' : pct >= 60 ? 'B' : pct >= 45 ? 'C' : 'F';
+  const gradeColor = pct >= 75 ? '#16a34a' : pct >= 45 ? '#d97706' : '#dc2626';
 
   return (
-    <div className="quiz-result-view">
-      <div className="result-header no-print">
-        <button className="btn btn-secondary" onClick={onBack}>
-          ← Back to Scores
-        </button>
-        <button className="btn btn-primary" onClick={handlePrint}>
-          🖨️ Print Result
-        </button>
+    <div className="qrv-wrapper">
+      {/* Action Bar */}
+      <div className="qrv-actions no-print">
+        <button className="qrv-btn-back" onClick={onBack}>← Back</button>
+        <button className="qrv-btn-print" onClick={handlePrint}>🖨 Print</button>
       </div>
 
-      <div className="print-container">
-        {/* Header for Print */}
-        <div className="result-header-print">
-          <h1>Quiz Result</h1>
-        </div>
+      {/* Report Document */}
+      <div className="qrv-document">
 
-        {/* Student Information */}
-        <div className="result-section student-info">
-          <h2>Student Information</h2>
-          <div className="info-grid">
-            <div className="info-item">
-              <span className="info-label">Name:</span>
-              <span className="info-value">{student.name}</span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Roll Number:</span>
-              <span className="info-value">{student.roll_number}</span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Email:</span>
-              <span className="info-value">{student.email || 'N/A'}</span>
-            </div>
+        {/* Header */}
+        <div className="qrv-doc-header">
+          <div className="qrv-doc-title">
+            <h1>Quiz Result Report</h1>
+            <p className="qrv-doc-subtitle">{quiz.subject_name} · {quiz.class_name}</p>
+          </div>
+          <div className="qrv-grade-badge" style={{ borderColor: gradeColor, color: gradeColor }}>
+            <span className="qrv-grade-label">Grade</span>
+            <span className="qrv-grade-value">{grade}</span>
           </div>
         </div>
 
-        {/* Quiz Information */}
-        <div className="result-section quiz-info">
-          <h2>Quiz Information</h2>
-          <div className="info-grid">
-            <div className="info-item">
-              <span className="info-label">Quiz Title:</span>
-              <span className="info-value">{quiz.title}</span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Quiz Number:</span>
-              <span className="info-value">Experiment {quiz.experiment_number}{quiz.experiment_title ? `: ${quiz.experiment_title}` : ''}</span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Subject:</span>
-              <span className="info-value">{quiz.subject_name}</span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Class:</span>
-              <span className="info-value">{quiz.class_name}</span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Duration:</span>
-              <span className="info-value">{quiz.duration_minutes} minutes</span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Total Marks:</span>
-              <span className="info-value">{quiz.total_marks}</span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Submitted At:</span>
-              <span className="info-value">{formatDate(attempt.submitted_at)}</span>
-            </div>
+        {/* Meta strip */}
+        <div className="qrv-meta-strip">
+          <div className="qrv-meta-item">
+            <span className="qrv-meta-label">Student</span>
+            <span className="qrv-meta-val">{student.name}</span>
+          </div>
+          <div className="qrv-meta-item">
+            <span className="qrv-meta-label">Roll No.</span>
+            <span className="qrv-meta-val">{student.roll_number}</span>
+          </div>
+          <div className="qrv-meta-item">
+            <span className="qrv-meta-label">Quiz</span>
+            <span className="qrv-meta-val">{quiz.title}</span>
+          </div>
+          <div className="qrv-meta-item">
+            <span className="qrv-meta-label">Experiment</span>
+            <span className="qrv-meta-val">No. {quiz.experiment_number}{quiz.experiment_title ? ` – ${quiz.experiment_title}` : ''}</span>
+          </div>
+          <div className="qrv-meta-item">
+            <span className="qrv-meta-label">Duration</span>
+            <span className="qrv-meta-val">{quiz.duration_minutes} min</span>
+          </div>
+          <div className="qrv-meta-item">
+            <span className="qrv-meta-label">Submitted</span>
+            <span className="qrv-meta-val">{formatDate(attempt.submitted_at)}</span>
           </div>
         </div>
 
-        {/* Score Summary */}
-        <div className="result-section score-summary">
-          <h2>Score Summary</h2>
-          <div className="score-display">
-            <div className="score-item">
-              <span className="score-label">Obtained Marks:</span>
-              <span className="score-value">{attempt.score} / {quiz.total_marks}</span>
-            </div>
-            <div className="score-item">
-              <span className="score-label">Percentage:</span>
-              <span className="score-value percentage">{attempt.percentage.toFixed(2)}%</span>
-            </div>
+        {/* Score Summary Row */}
+        <div className="qrv-score-row">
+          <div className="qrv-score-card qrv-score-main">
+            <span className="qrv-sc-num">{attempt.score}<span className="qrv-sc-total"> / {quiz.total_marks}</span></span>
+            <span className="qrv-sc-label">Marks Obtained</span>
+          </div>
+          <div className="qrv-score-card">
+            <span className="qrv-sc-num" style={{ color: gradeColor }}>{pct}%</span>
+            <span className="qrv-sc-label">Percentage</span>
+          </div>
+          <div className="qrv-score-card">
+            <span className="qrv-sc-num qrv-sc-correct">✓ {correct}</span>
+            <span className="qrv-sc-label">Correct</span>
+          </div>
+          <div className="qrv-score-card">
+            <span className="qrv-sc-num qrv-sc-wrong">✗ {incorrect}</span>
+            <span className="qrv-sc-label">Incorrect</span>
+          </div>
+          <div className="qrv-score-card">
+            <span className="qrv-sc-num">{questions.length}</span>
+            <span className="qrv-sc-label">Total Qs</span>
           </div>
         </div>
 
-        {/* Questions and Answers */}
-        <div className="result-section questions-section">
-          <h2>Questions and Answers</h2>
-          {questions.map((question, index) => (
-            <div key={question.id} className={`question-item ${question.is_correct ? 'correct' : 'incorrect'}`}>
-              <div className="question-header">
-                <span className="question-number">Question {index + 1}</span>
-                <span className="question-marks">({question.marks} {question.marks === 1 ? 'mark' : 'marks'})</span>
-                <span className={`answer-status ${question.is_correct ? 'correct' : 'incorrect'}`}>
-                  {question.is_correct ? '✓ Correct' : '✗ Incorrect'}
-                </span>
-              </div>
-              
-              <div className="question-text">
-                {question.question_text}
-              </div>
-
-              {question.question_type === 'mcq' && question.options && (
-                <div className="options-list">
-                  {question.options.map((option, optIndex) => {
-                    const optionLetter = String.fromCharCode(65 + optIndex);
-                    const isStudentAnswer = question.student_answer === option;
-                    const isCorrectAnswer = question.correct_answer === option;
-                    
-                    return (
-                      <div 
-                        key={optIndex} 
-                        className={`option-item ${isStudentAnswer && !isCorrectAnswer ? 'wrong-selection' : ''} ${isCorrectAnswer ? 'correct-answer' : ''}`}
-                      >
-                        <span className="option-letter">{optionLetter}</span>
-                        <span className="option-text">{option}</span>
-                        {isStudentAnswer && <span className="selection-indicator">(Your Answer)</span>}
-                        {isCorrectAnswer && !isStudentAnswer && <span className="correct-indicator">(Correct Answer)</span>}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              <div className="answer-section">
-                <div className="answer-row">
-                  <span className="answer-label">Your Answer:</span>
-                  <span className={`answer-value ${question.is_correct ? 'correct' : 'incorrect'}`}>
-                    {question.student_answer || '(Not answered)'}
-                  </span>
-                </div>
-                {!question.is_correct && (
-                  <div className="answer-row">
-                    <span className="answer-label">Correct Answer:</span>
-                    <span className="answer-value correct">
-                      {question.correct_answer}
+        {/* Questions Table */}
+        <div className="qrv-table-section">
+          <h2 className="qrv-table-title">Answer Sheet</h2>
+          <table className="qrv-table">
+            <thead>
+              <tr>
+                <th style={{ width: '40px' }}>#</th>
+                <th>Question</th>
+                <th style={{ width: '130px' }}>Your Answer</th>
+                <th style={{ width: '130px' }}>Correct Answer</th>
+                <th style={{ width: '70px' }}>Marks</th>
+                <th style={{ width: '80px' }}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {questions.map((q, idx) => (
+                <tr key={q.id} className={q.is_correct ? 'qrv-row-ok' : 'qrv-row-err'}>
+                  <td className="qrv-td-num">{idx + 1}</td>
+                  <td className="qrv-td-question">{q.question_text}</td>
+                  <td className={`qrv-td-ans ${q.is_correct ? 'qrv-ans-ok' : 'qrv-ans-err'}`}>
+                    {q.student_answer || <em>—</em>}
+                  </td>
+                  <td className="qrv-td-ans qrv-ans-ok">
+                    {q.correct_answer}
+                  </td>
+                  <td className="qrv-td-marks">
+                    {q.earned_marks}/{q.marks}
+                  </td>
+                  <td className="qrv-td-status">
+                    <span className={`qrv-badge ${q.is_correct ? 'qrv-badge-ok' : 'qrv-badge-err'}`}>
+                      {q.is_correct ? '✓' : '✗'}
                     </span>
-                  </div>
-                )}
-                <div className="answer-row">
-                  <span className="answer-label">Marks Obtained:</span>
-                  <span className="answer-value">
-                    {question.earned_marks} / {question.marks}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        {/* Footer for Print */}
-        <div className="result-footer">
-          <p>Generated on {new Date().toLocaleString()}</p>
+        {/* Footer */}
+        <div className="qrv-footer">
+          <span>IT Department Assessment System</span>
+          <span>Generated: {new Date().toLocaleString('en-IN')}</span>
         </div>
+
       </div>
     </div>
   );
 };
 
 export default QuizResultView;
-

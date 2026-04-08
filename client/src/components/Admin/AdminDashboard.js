@@ -18,45 +18,47 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="admin-dashboard">
-      <div className="dashboard-header">
-        <h1>Admin Dashboard</h1>
-        <div className="user-info">
-          <span>Welcome, {user?.name}</span>
-          <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
+    <div className="admin-dashboard min-h-screen bg-slate-50">
+      <div className="container pb-0">
+        <div className="dashboard-header">
+          <h1>Admin Dashboard</h1>
+          <div className="user-info">
+            <span>Welcome, {user?.name}</span>
+            <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
+          </div>
         </div>
-      </div>
 
-      <nav className="nav-menu">
-        <Link 
-          to="/admin/subjects" 
-          className={activeTab === 'subjects' ? 'active' : ''}
-          onClick={() => setActiveTab('subjects')}
-        >
-          Subjects
-        </Link>
-        <Link 
-          to="/admin/teachers" 
-          className={activeTab === 'teachers' ? 'active' : ''}
-          onClick={() => setActiveTab('teachers')}
-        >
-          Teachers
-        </Link>
-        <Link 
-          to="/admin/students" 
-          className={activeTab === 'students' ? 'active' : ''}
-          onClick={() => setActiveTab('students')}
-        >
-          Students
-        </Link>
-        <Link 
-          to="/admin/statistics" 
-          className={activeTab === 'statistics' ? 'active' : ''}
-          onClick={() => setActiveTab('statistics')}
-        >
-          Statistics
-        </Link>
-      </nav>
+        <nav className="nav-menu">
+          <Link 
+            to="/admin/subjects" 
+            className={activeTab === 'subjects' ? 'active' : ''}
+            onClick={() => setActiveTab('subjects')}
+          >
+            Subjects
+          </Link>
+          <Link 
+            to="/admin/teachers" 
+            className={activeTab === 'teachers' ? 'active' : ''}
+            onClick={() => setActiveTab('teachers')}
+          >
+            Teachers
+          </Link>
+          <Link 
+            to="/admin/students" 
+            className={activeTab === 'students' ? 'active' : ''}
+            onClick={() => setActiveTab('students')}
+          >
+            Students
+          </Link>
+          <Link 
+            to="/admin/statistics" 
+            className={activeTab === 'statistics' ? 'active' : ''}
+            onClick={() => setActiveTab('statistics')}
+          >
+            Statistics
+          </Link>
+        </nav>
+      </div>
 
       <div className="container">
         <Routes>

@@ -89,7 +89,7 @@ router.post('/teachers', async (req, res) => {
     
     const [result] = await db.pool.query(
       'INSERT INTO users (user_id, name, email, password, role, qualification) VALUES (?, ?, ?, ?, ?, ?)',
-      [user_id, name, email, hashedPassword, 'teacher', qualification]
+      [user_id, name, email || null, hashedPassword, 'teacher', qualification]
     );
 
     // Assign subjects to teacher
@@ -134,7 +134,7 @@ router.put('/teachers/:id', async (req, res) => {
     
     await db.pool.query(
       'UPDATE users SET name = ?, email = ?, qualification = ? WHERE id = ?',
-      [name, email, qualification, req.params.id]
+      [name, email || null, qualification, req.params.id]
     );
 
     // Update subject assignments
@@ -163,7 +163,7 @@ router.post('/students', async (req, res) => {
     
     const [result] = await db.pool.query(
       'INSERT INTO users (user_id, name, email, password, role, class_id, roll_number) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [user_id, name, email, hashedPassword, 'student', class_id || null, roll_number || null]
+      [user_id, name, email || null, hashedPassword, 'student', class_id || null, roll_number || null]
     );
 
     // Enroll student in subjects
@@ -194,7 +194,7 @@ router.get('/students', async (req, res) => {
       LEFT JOIN student_subjects ss ON u.id = ss.student_id
       LEFT JOIN subjects s ON ss.subject_id = s.id
       WHERE u.role = 'student'
-      GROUP BY u.id
+      GROUP BY u.id, c.name
       ORDER BY u.name
     `);
     res.json(students);
@@ -210,7 +210,7 @@ router.put('/students/:id', async (req, res) => {
     
     // Build update query dynamically
     let updateFields = ['name = ?', 'email = ?', 'class_id = ?', 'roll_number = ?'];
-    let updateValues = [name, email, class_id || null, roll_number || null];
+    let updateValues = [name, email || null, class_id || null, roll_number || null];
     
     // Update password if provided
     if (password && password.trim() !== '') {
@@ -303,7 +303,7 @@ router.post('/import-users', upload.single('file'), async (req, res) => {
         
         const [result] = await db.pool.query(
           'INSERT INTO users (user_id, name, email, password, role, qualification) VALUES (?, ?, ?, ?, ?, ?)',
-          [user_id, name, email, hashedPassword, role, qualification]
+          [user_id, name, email || null, hashedPassword, role, qualification]
         );
 
         if (role === 'teacher') {
